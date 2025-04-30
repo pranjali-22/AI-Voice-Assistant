@@ -3,7 +3,8 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from "./auth/Login.tsx";
 import Signup from "./auth/Signup.tsx";
-import Home from "./Home.tsx";
+import Home from "./home/Home.tsx";
+import Call from "./home/Call.tsx";
 
 function App() {
     return (
@@ -12,6 +13,7 @@ function App() {
                 <Route path="/" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/home" element={<Home />} />
+                <Route path="/call" element={<Call />} />
             </Routes>
         </Router>
     );
