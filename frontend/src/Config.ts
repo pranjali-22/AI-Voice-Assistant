@@ -39,20 +39,13 @@ const handleSubmit = async (e, setError, navigate) => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
+    localStorage.setItem("userEmail", email);
 
     try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         console.log(userCredential);
-        const user = await getUserByEmail(email);
-        if (user && user.name) {
-            // Store username in localStorage
-            localStorage.setItem("username", user.name);
-            console.log("Username saved to localStorage:", user.name);
-            navigate("/home")
+        navigate("/home")
 
-        } else {
-            console.log("User not found or name not available");
-        }
     } catch (error) {
         setError(error.message);
     }
@@ -71,13 +64,14 @@ async function addUser(email: string, name: string) {
         console.error("Error adding user:", error);
     }
 }
-async function getUserByEmail(email: string) {
+async function getUserByEmail(email: string|null) {
     try {
         // Query the 'user' collection for a document with the specified email
         const userQuery = query(
             collection(db, "user"),  // replace "user" with the actual collection name
             where("email", "==", email)
         );
+        console.log(email);
 
         // Execute the query
         const querySnapshot = await getDocs(userQuery);
@@ -97,4 +91,4 @@ async function getUserByEmail(email: string) {
     }
 }
 const db = getFirestore(app);
-export {auth,googleProvider,handleGoogleLogin,handleSubmit,db}
+export {auth,googleProvider,handleGoogleLogin,handleSubmit,db,getUserByEmail}
