@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Call = () => {
     const [aiSpeaking, setAiSpeaking] = useState(false);
-    const [userSpeaking, setUserSpeaking] = useState(true);
+    const [userSpeaking, setUserSpeaking] = useState(false);
     const navigate = useNavigate();
 
     const endCall = () => {

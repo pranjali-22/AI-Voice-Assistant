@@ -3,8 +3,8 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from "./auth/Login.tsx";
 import Signup from "./auth/Signup.tsx";
-import Home from "./home/Home.tsx";
-import Call from "./home/Call.tsx";
+import Home from "./main/Home.tsx";
+import Call from "./main/Call.tsx";
 
 function App() {
     return (
