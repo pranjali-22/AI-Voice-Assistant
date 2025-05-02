@@ -3,7 +3,7 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth, GoogleAuthProvider,signInWithPopup,signInWithEmailAndPassword  } from "firebase/auth";
-import {addDoc, collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -19,8 +19,6 @@ const firebaseConfig = {
     appId: "1:85664327777:web:ca663aa7479ea6275e2220",
     measurementId: "G-EPSGR3TEN1"
 };
-
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
@@ -40,7 +38,6 @@ const handleSubmit = async (e, setError, navigate) => {
     const email = e.target.email.value;
     const password = e.target.password.value;
     localStorage.setItem("userEmail", email);
-
     try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         console.log(userCredential);
@@ -50,20 +47,6 @@ const handleSubmit = async (e, setError, navigate) => {
         setError(error.message);
     }
 };
-async function addUser(email: string, name: string) {
-    console.log("inside add");
-    try {
-        const docRef = await addDoc(collection(db, "user"), {
-            email: email,
-            name: name,
-            createdAt: new Date()
-        });
-
-        console.log("User added with ID:", docRef.id);
-    } catch (error) {
-        console.error("Error adding user:", error);
-    }
-}
 async function getUserByEmail(email: string|null) {
     try {
         // Query the 'user' collection for a document with the specified email
