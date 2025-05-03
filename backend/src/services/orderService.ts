@@ -1,6 +1,9 @@
 // Firebase SDK imports
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, query, where, getDocs } from "firebase/firestore";
+import { getFirestore, collection, query, where, getDocs, addDoc } from "firebase/firestore";
+import firebase from "firebase/compat";
+import increment = firebase.database.ServerValue.increment;
+import FieldValue = firebase.firestore.FieldValue;
 
 // Firebase config
 const firebaseConfig = {
@@ -30,6 +33,7 @@ async function getOrderByNumber(orderNumber: string | null) {
         );
 
         const querySnapshot = await getDocs(orderQuery);
+        console.log(querySnapshot);
 
         if (querySnapshot.empty) {
             console.log("No order found with orderNumber:", orderNumber);
@@ -44,5 +48,42 @@ async function getOrderByNumber(orderNumber: string | null) {
         return null;
     }
 }
+async function addOrder(order: any) {
+    try {
+        // Add a new document to the "order" collection
+        const docRef = await addDoc(collection(db, "order"), order);
+        console.log("Order added with ID:", docRef.id);
+        return docRef.id; // Returning the ID of the newly created order
+    } catch (error) {
+        console.error("Error adding order:", error);
+        return null;
+    }
+}
+function generateOrderNumber() {
+    // Generate a random 4-digit number and ensure it’s always 4 digits with leading zeros
+    return Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+}
 
-export { db, getOrderByNumber };
+// Function to check if an order number already exists
+async function orderNumberExists(orderNumber: string) {
+    const ordersRef = collection(db, "orders");
+    const q = query(ordersRef, where("orderNumber", "==", orderNumber));
+
+    const querySnapshot = await getDocs(q);
+    return !querySnapshot.empty;  // Return true if order number exists
+}
+
+// Function to generate a unique order number
+async function generateUniqueOrderNumber() {
+    let newOrderNumber = generateOrderNumber();
+
+    // Check if the generated order number already exists
+    while (await orderNumberExists(newOrderNumber)) {
+        console.log(`Order number ${newOrderNumber} already exists. Generating a new one...`);
+        newOrderNumber = generateOrderNumber();  // Generate a new one if it exists
+    }
+
+    console.log(`Generated unique order number: ${newOrderNumber}`);
+    return newOrderNumber;
+}
+export { db, getOrderByNumber,addOrder,generateUniqueOrderNumber };
