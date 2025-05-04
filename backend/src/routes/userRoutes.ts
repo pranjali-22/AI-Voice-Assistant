@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import {getOrderByNumber, addOrder, generateUniqueOrderNumber} from '../services/orderService';
-import {getCustomerByEmail,updateCustomerDetails} from "../services/userServices"; // Update the path to where you store this
+import {getCustomerByEmail,updateCustomerDetails} from "../services/userServices";
+import {latestQueryBasedOnEmail} from "../services/queries"; // Update the path to where you store this
 
 const router = express.Router();
 
@@ -12,6 +13,21 @@ router.get('/user/details/:email', async (req: any, res: any) => {
             res.status(200).json(customer);
         } else {
             res.status(404).json({ error: 'Customer not found' });
+        }
+    } catch (error) {
+        console.error('Error fetching customer:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+router.get('/user/query/:email', async (req: any, res: any) => {
+    const email = req.params.email;
+    try {
+        const query = await latestQueryBasedOnEmail(email);
+        if (query) {
+            res.status(200).json({query:query.typeOfQuery,
+            queryQuestion:query.question});
+        } else {
+            res.status(200).json({ query:"null" , queryQuestion:"null"});
         }
     } catch (error) {
         console.error('Error fetching customer:', error);
