@@ -1,16 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import aiImage from '../assets/ai-image.png';
 import userImage from '../assets/user-image.png';
 import { useNavigate } from 'react-router-dom';
+import Vapi from '@vapi-ai/web';
 
 const Call = () => {
     const [aiSpeaking, setAiSpeaking] = useState(false);
     const [userSpeaking, setUserSpeaking] = useState(false);
     const navigate = useNavigate();
+    const vapi = new Vapi(process.env.VAPI_API_KEY);
 
     const endCall = () => {
+        vapi.stop();
         navigate('/home');
     };
+
+    useEffect(() => {
+        vapi.start(process.env.VAPI_AGENT_KEY);
+        vapi.on('call-end', () => {
+            endCall();
+        });
+
+        vapi.on('speech-start', () => {
+            setAiSpeaking(true);
+        });
+
+        vapi.on('speech-end', () => {
+            setAiSpeaking(false);
+        });
+
+        // Cleanup function to stop the call when navigating away or component unmounts
+        return () => {
+            vapi.stop();
+        };
+    }, [navigate]);
 
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-start py-10 px-6">

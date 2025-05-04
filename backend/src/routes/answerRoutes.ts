@@ -23,7 +23,7 @@ router.post('/typeofQuery', async (req: any, res: any) => {
             2. orderCreate - if the user wants to create a new order
             3. accountUpdate - if the user wants to update their account
             4. accountDetails - if the user wants to know about their account
-            5. general - if it's anything else
+            5. general - if they want to know anything from the documentation. When there are questions related to an order or general questions which are not related to a specific order or their account
             Do not add \n in the word. Just give the answer from either orderDetails, orderCreate, accountUpdate, accountDetails, or general.
             The questions are going to be read by a voice assistant so do not use special characters such as '/', '*', or others that might break the voice assistant.` }
         ];
