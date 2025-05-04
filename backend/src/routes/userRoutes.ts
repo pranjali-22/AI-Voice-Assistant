@@ -23,6 +23,7 @@ router.get('/user/query/:email', async (req: any, res: any) => {
     const email = req.params.email;
     try {
         const query = await latestQueryBasedOnEmail(email);
+        console.log(query)
         if (query) {
             res.status(200).json({query:query.typeOfQuery,
             queryQuestion:query.question});
