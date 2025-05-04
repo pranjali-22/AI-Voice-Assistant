@@ -2,11 +2,11 @@ import express, { Request, Response } from 'express';
 import orderRoutes from './routes/orderRoutes';
 import answerRoutes from './routes/answerRoutes';
 import userRoutes from './routes/userRoutes';
-
-
+import firebase from "firebase/compat";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
 
 app.use(express.json());
 

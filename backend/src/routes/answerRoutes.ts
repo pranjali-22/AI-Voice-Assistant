@@ -3,6 +3,7 @@ import { GoogleGenAI } from "@google/genai";
 import * as fs from 'fs';
 
 import dotenv from 'dotenv';
+import {addQuery} from "../services/queries";
 
 dotenv.config();
 
@@ -12,6 +13,7 @@ const ai = new GoogleGenAI({
 const router = express.Router();
 router.post('/typeofQuery', async (req: any, res: any) => {
     const userQuery = req.body.question; // Ensure query is passed as part of the body
+
     if (!userQuery) {
         return res.status(400).json({ error: "Missing 'question' parameter." });
     }
@@ -32,6 +34,13 @@ router.post('/typeofQuery', async (req: any, res: any) => {
             model: "gemini-2.0-flash",
             contents: contents
         });
+        const query = {
+            question:userQuery,
+            typeOfQuery: response.text?.trim(),
+            email:"test@gmail.com",
+            date: new Date().toISOString()
+        }
+        await addQuery(query)
 
         console.log(response.text); // Log AI's response for debugging
         res.status(200).json({ typeOfQuery: response.text?.trim() }); // Send the type of query response
@@ -52,7 +61,7 @@ router.post('/generalAnswer', async (req: any, res: any) => {
     try {
         const contents = [
             {
-                text: `Answer this question after reading the pdf. The question is: "${question}". Please provide the answer. The answer will be read by a voice ai agent so do not include any special characters. only include words`
+                text: `Answer this question after reading the pdf. The question is: "${question}". Please provide the answer. The answer will be read by a voice ai agent so do not include any special characters. only include words. Do not make the answers too short. Do not use based on documentation provided, instead use based on company's policies`
             },
             {
                 inlineData: {

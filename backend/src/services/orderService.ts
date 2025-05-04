@@ -19,6 +19,7 @@ const firebaseConfig = {
 // Initialize Firebase App
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 // Function to get order by number
 async function getOrderByNumber(orderNumber: string | null) {
@@ -33,7 +34,7 @@ async function getOrderByNumber(orderNumber: string | null) {
         );
 
         const querySnapshot = await getDocs(orderQuery);
-        console.log(querySnapshot);
+        // console.log(querySnapshot);
 
         if (querySnapshot.empty) {
             console.log("No order found with orderNumber:", orderNumber);

@@ -41,7 +41,12 @@ const handleSubmit = async (e, setError, navigate) => {
     try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         console.log(userCredential);
-        navigate("/home")
+        const user = await getUserByEmail(email);
+        if (user?.role === "admin") {
+            navigate("/analytics");
+        } else {
+            navigate("/home");
+        }
 
     } catch (error) {
         setError(error.message);

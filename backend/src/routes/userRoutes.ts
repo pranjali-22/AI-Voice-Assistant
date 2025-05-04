@@ -29,7 +29,7 @@ router.post('/user/update', async (req: any, res: any) => {
         const updatedCustomer = await updateCustomerDetails(email, { name, address });
 
         if (updatedCustomer) {
-            res.status(200).json({ message: 'Customer details updated successfully', customer: updatedCustomer });
+            res.status(200).json({ updatedCustomer });
         } else {
             res.status(500).json({ error: 'Failed to update customer details' });
         }
